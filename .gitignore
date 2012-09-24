@@ -1,0 +1,7 @@
+Makefile
+main
+dist
+*.hi
+*.hi-boot
+*.o
+*.o-boot
