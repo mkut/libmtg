@@ -1,12 +1,24 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Magic.Reader
    ( readCardsFile
+
+   , parseName
+   , parseManaCost
+   , parseTypes
+   , parseCardType
+   , parseSupertype
+   , parseSubtype
+   , parseRarity
+   , parseText
+   , parseFlavorText
+   , parsePT
+   , parseLoyalty
    ) where
 
 import Magic.Card
 import Magic.Color
 import Magic.Mana
-import Milib.IO
+import Milib.IO (number')
 import Prelude
 import System.IO
 import Control.Monad
@@ -24,28 +36,27 @@ toCards s = case parse (many parseCard) "" s of
 -- Card
 parseCard :: Stream s m Char => ParsecT s u m Card
 parseCard = do
-   n <- many1 nameChar
+   n <- parseName
    _ <- char '/'
    c <- parseManaCost
    _ <- newline
-   spt <- many (try parseSupertype)
-   ct <- many1 (try parseCardType)
-   st <- option [] $ do
-      spaces
-      _ <- char '-'
-      many1 parseSubtype
+   (ct, spt, st) <- parseTypes
    _ <- char '/'
    r <- parseRarity
    _ <- newline
    _ <- string "=====\n"
-   t <- many textChar
+   t <- parseText
    _ <- string "=====\n"
-   ft <- many textChar
+   ft <- parseFlavorText
    _ <- string "=====\n"
    mpt <- optionMaybe $ try $ withNewline parsePT
    ml <- optionMaybe $ try $ withNewline parseLoyalty
    _ <- newline
    return $ Card n c ct spt st t ft mpt ml r
+
+-- Text
+parseName :: Stream s m Char => ParsecT s u m String
+parseName = many1 nameChar
 
 nameChar :: Stream s m Char => ParsecT s u m Char
 nameChar =   letter
@@ -54,6 +65,12 @@ nameChar =   letter
          <|> char '\''
          <|> char ','
          <|> char '-'
+
+parseText :: Stream s m Char => ParsecT s u m String
+parseText = many textChar
+
+parseFlavorText :: Stream s m Char => ParsecT s u m String
+parseFlavorText = many textChar
 
 textChar :: Stream s m Char => ParsecT s u m Char
 textChar =   nameChar
@@ -70,6 +87,17 @@ textChar =   nameChar
          <|> char '{'
          <|> char '}'
          <|> char '+'
+
+-- Types
+parseTypes :: Stream s m Char => ParsecT s u m ([CardType], [Supertype], [Subtype])
+parseTypes = do
+   spt <- many (try parseSupertype)
+   ct <- many1 (try parseCardType)
+   st <- option [] $ do
+      spaces
+      _ <- char '-'
+      many1 parseSubtype
+   return (ct, spt, st)
 
 parseCardType :: Stream s m Char => ParsecT s u m CardType
 parseCardType = do
@@ -102,12 +130,14 @@ parseSubtype = do
    x <- many1 letter
    return $ toSubtype x
 
+-- Rarity
 parseRarity :: Stream s m Char => ParsecT s u m Rarity
 parseRarity =   do { _ <- char 'C'; return Common }
             <|> do { _ <- char 'U'; return Uncommon }
             <|> do { _ <- char 'R'; return Rare }
             <|> do { _ <- char 'M'; return MythicRare }
 
+-- Number
 parsePT :: Stream s m Char => ParsecT s u m (Power, Toughness)
 parsePT = do
    p <- parsePower
@@ -116,16 +146,15 @@ parsePT = do
    return (p, t)
 
 parsePower :: Stream s m Char => ParsecT s u m Power
-parsePower =   liftM Power number
+parsePower =   liftM Power number'
            <|> do { _ <- char '*'; return UndecidablePower }
 
 parseToughness :: Stream s m Char => ParsecT s u m Toughness
-parseToughness =   liftM Toughness number
+parseToughness =   liftM Toughness number'
                <|> do { _ <- char '*'; return UndecidableToughness }
 
 parseLoyalty :: Stream s m Char => ParsecT s u m Int
-parseLoyalty = do
-   number
+parseLoyalty = number'
 
 -- Mana
 parseManaCost :: Stream s m Char => ParsecT s u m ManaCost
@@ -143,7 +172,7 @@ parseManaSymbol =   try parseGenericManaSymbol
 parseGenericManaSymbol :: Stream s m Char => ParsecT s u m ManaSymbol
 parseGenericManaSymbol = do
    _ <- char '('
-   n <- number
+   n <- number'
    _ <- char ')'
    return $ GenericManaSymbol n
 

@@ -8,25 +8,21 @@ description:         Library for Magic: the Gathering
 license:             BSD3
 license-file:        LICENSE
 author:              mkut
-maintainer:          mkut.at@gmail.com
+maintainer:          mkut@gmail.com
 -- copyright:           
 category:            Game
 build-type:          Simple
 cabal-version:       >=1.8
 
 source-repository head
-  type:              git
-  location:          https://github.com/mkut/libmtg.git
+   type:             git
+   location:         https://github.com/mkut/libmtg.git
 
 library
-  exposed-modules:     Magic.BoosterPack
-                     , Magic.Card
-                     , Magic.Mana
-                     , Magic.Reader
-                     , Magic.Color
+  exposed-modules:     Magic.BoosterPack, Magic.Card, Magic.Mana, Magic.Reader, Magic.Color
   -- other-modules:       
-  build-depends:       base ==4.3.*
+  build-depends:       base ==4.5.*
                      , random ==1.0.*
+                     , milib ==0.1.*
+                     , parsec ==3.1.2
                      , random-shuffle ==0.0.*
-                     , parsec ==3.1.*
-                     , milib ==0.1.0.*
