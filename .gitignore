@@ -1,6 +1,7 @@
 Makefile
 main
-dist
+dist/*
+!dist/libmtg-0.1.0.0.tar.gz
 *.hi
 *.hi-boot
 *.o
