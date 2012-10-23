@@ -118,7 +118,7 @@ showTypes card
    | null st   = ct
    | otherwise = ct ++ " -- " ++ st
    where
-      ct = intercalate " " $ map show (cardTypes card) ++ map show (cardSupertypes card)
+      ct = intercalate " " $ map show (cardSupertypes card) ++ map show (cardTypes card)
       st = intercalate " " $ map show (cardSubtypes card)
 
 showPT :: Card -> String

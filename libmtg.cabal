@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                libmtg
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            Library for Magic: the Gathering
 description:         Library for Magic: the Gathering
 license:             BSD3
