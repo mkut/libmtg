@@ -1,9 +1,11 @@
 import Magic.Reader
 import Magic.BoosterPack
+import Magic.MWDeck
 
 main = do
    cs <- readCardsFile "data/rtr.txt"
    putStrLn $ show (length cs) ++ " cards parsed."
-   mapM_ print =<< genPack cs
+   cards <- genPack cs
+   writeAsMWDeck "hoge.mwdeck" cards
 
 -- vim: set expandtab:

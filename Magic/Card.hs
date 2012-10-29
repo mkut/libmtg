@@ -95,6 +95,9 @@ data Card = Card
    }
    deriving (Eq, Show)
 
+instance Ord Card where
+   compare x y = compare (cardName x) (cardName y)
+
 withRarity :: Rarity -> Card -> Bool
 withRarity x = (==x) . cardRarity
 
