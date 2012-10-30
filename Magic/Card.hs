@@ -1,6 +1,7 @@
 module Magic.Card
    ( Card (..)
 
+   , CardSet (..)
    , CardType (..)
    , Supertype (..)
    , Subtype (..)
@@ -16,6 +17,7 @@ module Magic.Card
    , toSubtype
 
    , cardColors
+   , cardSet
 
    , showTypes
    , showPT
@@ -25,6 +27,10 @@ import Magic.Color
 import Magic.Mana
 import Prelude
 import Data.List
+
+data CardSet = CardSet
+   { cardSetName :: String
+   } deriving (Eq, Show)
 
 data CardType = Land
               | Creature
@@ -92,6 +98,8 @@ data Card = Card
    , cardPT         :: Maybe (Power, Toughness)
    , cardLoyalty    :: Maybe Int
    , cardRarity     :: Rarity
+   , cardID         :: Integer
+   , cardSetID      :: (CardSet, Integer)
    }
    deriving (Eq, Show)
 
@@ -115,6 +123,9 @@ toSubtype t = CreatureType t
 
 cardColors :: Card -> CombColor
 cardColors = manaCostCombColor . cardManaCost
+
+cardSet :: Card -> CardSet
+cardSet = fst . cardSetID
 
 showTypes :: Card -> String
 showTypes card

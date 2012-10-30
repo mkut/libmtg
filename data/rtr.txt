@@ -7,6 +7,8 @@ When Angel of Serenity leaves the battlefield, return the exiled cards to their 
 =====
 =====
 5/6
+=====
+RTR #1
 
 Armory Guard/(3)(W)
 Creature - Giant Soldier/C
@@ -16,6 +18,8 @@ Armory Guard has vigilance as long as you control a Gate.
 The Dimir agents watched from the shadows. "Eight hours, and I've yet to see him blink," Nefara hissed. "I suggest we find another way in."
 =====
 2/5
+=====
+RTR #2
 
 Arrest/(2)(W)
 Enchantment - Aura/U
@@ -26,6 +30,8 @@ Enchanted creature can't attack or block, and its activated abilities can't be a
 "We will prove your guilt. We don't arrest the innocent, you know."
 -Arrester Lavinia, Tenth Precinct
 =====
+=====
+RTR #3
 
 Avenging Arrow/(2)(W)
 Instant/C
@@ -35,6 +41,8 @@ Destroy target creature that dealt damage this turn.
 "Forgive the theft. Punish the deception."
 -Alcarus, Selesnya archer
 =====
+=====
+RTR #4
 
 Azorius Arrester/(1)(W)
 Creature - Human Soldier/C

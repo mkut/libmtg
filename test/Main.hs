@@ -1,11 +1,29 @@
+{-# LANGUAGE TupleSections #-}
+import Magic.Card
 import Magic.Reader
 import Magic.BoosterPack
 import Magic.MWDeck
+import System.Directory
+import Control.Applicative
+import Control.Monad
+import Data.Maybe
+import Data.List
+import qualified Data.Map as Map
 
 main = do
-   cs <- readCardsFile "data/rtr.txt"
-   putStrLn $ show (length cs) ++ " cards parsed."
-   cards <- genPack cs
-   writeAsMWDeck "hoge.mwdeck" cards
+   files <- map (prefix++) . filter isCardFile <$> getDirectoryContents prefix
+   db  <- liftM (Map.fromList . catMaybes) $ forM files $ \file -> do
+      mcard <- readCardFile file
+      return $ liftM (\c -> (cardID c, c)) mcard
+   let cards = Map.elems $ Map.filter ((=="Return to Ravnica") . cardSetName . cardSet) db
+   putStrLn $ show (length cards) ++ " cards parsed."
+   pack <- genPack cards
+   mapM_ print pack
+   where
+      prefix = "data/card/"
+
+isCardFile []      = False
+isCardFile ('.':_) = False
+isCardFile _       = True
 
 -- vim: set expandtab:
