@@ -18,9 +18,13 @@ main = do
    let cards = Map.elems $ Map.filter ((=="Return to Ravnica") . cardSetName . cardSet) db
    putStrLn $ show (length cards) ++ " cards parsed."
    pack <- genPack cards
-   mapM_ print pack
+   mapM_ p pack
    where
       prefix = "data/card/"
+      p (x,f) = do
+         putStr (cardName x)
+         when f $ putStr "(Foil)"
+         putStrLn ""
 
 isCardFile []      = False
 isCardFile ('.':_) = False
