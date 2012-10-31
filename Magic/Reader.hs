@@ -32,12 +32,10 @@ toCards s = case parse (many parseCard) "" s of
 
 readCardFile :: FilePath -> IO (Maybe Card)
 readCardFile fname = do
-   toCard =<< hGetContents =<< openFile fname ReadMode
-
-toCard :: String -> IO (Maybe Card)
-toCard s = case parse parseCard "" s of
-   Left err -> do { print err; return Nothing }
-   Right x  -> return (Just x)
+   s <- hGetContents =<< openFile fname ReadMode
+   case parse parseCard fname s of
+      Left err -> do { print err; return Nothing }
+      Right x  -> return (Just x)
 
 -- Card
 parseCard :: Stream s m Char => ParsecT s u m Card
@@ -48,8 +46,12 @@ parseCard = do
    rarity        <- withNewline parseRarity
    text          <- manyTill anyChar separator
    ftext         <- manyTill anyChar separator
-   pt            <- optionMaybe $ try $ withNewline parsePT
-   loyalty       <- optionMaybe $ try $ withNewline parseLoyalty
+   pt            <- if elem Creature ct
+                       then liftM Just $ withNewline parsePT
+                       else return Nothing
+   loyalty       <- if elem Planeswalker ct
+                       then liftM Just $ withNewline parseLoyalty
+                       else return Nothing
    gid           <- withNewline parseGID
    sid           <- withNewline parseSID
    return $ Card

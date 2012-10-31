@@ -30,7 +30,7 @@ import Data.List
 
 data CardSet = CardSet
    { cardSetName :: String
-   } deriving (Eq, Show)
+   } deriving (Eq, Ord, Show)
 
 data CardType = Land
               | Creature
