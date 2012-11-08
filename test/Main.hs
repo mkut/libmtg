@@ -21,7 +21,7 @@ main = do
    mapM_ p pack
    where
       prefix = "data/card/"
-      p (x,f) = do
+      p (RealCard x f) = do
          putStr (cardName x)
          when f $ putStr "(Foil)"
          putStrLn ""

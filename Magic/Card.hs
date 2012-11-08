@@ -21,6 +21,11 @@ module Magic.Card
 
    , showTypes
    , showPT
+
+   , RealCard (..)
+   , foil
+   , nonFoil
+
    ) where
 
 import Magic.Color
@@ -105,6 +110,17 @@ data Card = Card
 
 instance Ord Card where
    compare x y = compare (cardName x) (cardName y)
+
+data RealCard = RealCard
+   { cardInfo :: Card
+   , isFoil   :: Bool
+   } deriving (Eq, Ord, Show)
+
+foil :: Card -> RealCard
+foil = flip RealCard True
+
+nonFoil :: Card -> RealCard
+nonFoil = flip RealCard False
 
 withRarity :: Rarity -> Card -> Bool
 withRarity x = (==x) . cardRarity
